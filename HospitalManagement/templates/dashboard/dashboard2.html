@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Dashboard</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="patientsChart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="treatmentPlansChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch data for patients
+            fetch('/api/patients/')
+                .then(response => response.json())
+                .then(patients => {
+                    var patientNames = patients.map(patient => patient.name);
+                    var patientAges = patients.map(patient => patient.age);
+
+                    // Render chart for patients
+                    var ctx = document.getElementById('patientsChart').getContext('2d');
+                    var patientsChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: patientNames,
+                            datasets: [{
+                                label: 'Patient Age',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1,
+                                data: patientAges,
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+
+            // Fetch data for treatment plans
+            fetch('/api/treatment-plans/')
+                .then(response => response.json())
+                .then(treatmentPlans => {
+                    var treatmentPlanDetails = treatmentPlans.map(plan => ({
+                        name: plan.name,
+                        startDate: new Date(plan.start_date).toLocaleDateString(),
+                        endDate: new Date(plan.end_date).toLocaleDateString()
+                    }));
+
+                    // Render chart for treatment plans
+                    var ctx = document.getElementById('treatmentPlansChart').getContext('2d');
+                    var treatmentPlansChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: treatmentPlanDetails.map(plan => plan.name),
+                            datasets: [{
+                                label: 'Start Date',
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1,
+                                data: treatmentPlanDetails.map(plan => plan.startDate),
+                            }, {
+                                label: 'End Date',
+                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                borderWidth: 1,
+                                data: treatmentPlanDetails.map(plan => plan.endDate),
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

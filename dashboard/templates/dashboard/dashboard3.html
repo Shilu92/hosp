@@ -1,0 +1,16 @@
+{% load the_django_plotly_dash %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hospital Management Dashboard</title>
+    {% plotly_header %}
+</head>
+<body>
+    <h1>Hospital Management Dashboard</h1>
+    <div>
+        {% plotly_app name='new_dashboard' %}  <!-- Ensure the name matches the DjangoDash name -->
+    </div>
+    {% plotly_footer %}
+</body>
+</html>

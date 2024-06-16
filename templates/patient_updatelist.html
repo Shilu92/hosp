@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Updates</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Patient Updates</h1>
+        <a href="{% url 'patientupdate_create' %}" class="btn btn-primary mb-2">Add New Update</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Update</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for update in patientupdates %}
+                <tr>
+                    <td>{{ update.id }}</td>
+                    <td>{{ update.patient.name }}</td>
+                    <td>{{ update.update }}</td>
+                    <td>{{ update.date }}</td>
+                    <td>
+                        <a href="{% url 'patientupdate_detail' update.id %}" class="btn btn-info">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
